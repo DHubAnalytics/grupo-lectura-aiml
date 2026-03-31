@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI/ML y Ciencias Sociales — Grupo de Lectura</title>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --ink: #233351;
+  --text: #233351;
+  --muted: #42699D;
+  --light: #86B2DE;
+  --border: #C0DCF5;
+  --bg: #fafaf8;
+  --paper: #ffffff;
+  --accent: #C84950;
+  --accent-soft: #F9DCDF;
+  --tech: #5385C3;
+  --tech-soft: #D8E8F9;
+  --social: #88418C;
+  --social-soft: #F3E1F4;
+  --bridge: #3E8B96;
+  --bridge-soft: #DDF2F6;
+  --green: #2C6970;
+  --green-soft: #DDF2F6;
+}
+
+body {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  color: var(--text);
+  background: var(--bg);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ---- HEADER ---- */
+header {
+  background: var(--ink);
+  color: #fff;
+  padding: 3.5rem 2rem 3rem;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+header::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(83,133,195,0.25) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 50%, rgba(136,65,140,0.2) 0%, transparent 60%);
+  pointer-events: none;
+}
+header * { position: relative; }
+header h1 {
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 0.6rem;
+}
+header p {
+  font-size: 1.05rem;
+  color: rgba(255,255,255,0.7);
+  max-width: 600px;
+  margin: 0 auto;
+}
+.header-meta {
+  display: inline-flex;
+  gap: 1.5rem;
+  margin-top: 1.2rem;
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.55);
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.header-meta span { display: flex; align-items: center; gap: 0.35rem; }
+
+/* ---- NAV ---- */
+nav {
+  background: var(--paper);
+  border-bottom: 1px solid var(--border);
+  padding: 0 2rem;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+nav ul {
+  list-style: none;
+  display: flex;
+  gap: 0;
+  max-width: 960px;
+  margin: 0 auto;
+  overflow-x: auto;
+}
+nav a {
+  display: block;
+  padding: 0.85rem 1.1rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+  color: var(--muted);
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+  white-space: nowrap;
+  transition: all 0.2s;
+}
+nav a:hover, nav a.active {
+  color: var(--ink);
+  border-bottom-color: var(--accent);
+}
+
+/* ---- MAIN ---- */
+main {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 2.5rem 1.5rem 4rem;
+}
+section { margin-bottom: 3.5rem; }
+section:target { scroll-margin-top: 60px; }
+
+h2 {
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--ink);
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.01em;
+}
+h2::after {
+  content: '';
+  display: block;
+  width: 40px;
+  height: 3px;
+  background: var(--accent);
+  margin-top: 0.45rem;
+  border-radius: 2px;
+}
+
+.intro-text {
+  font-size: 1.02rem;
+  color: var(--muted);
+  margin-bottom: 1.5rem;
+  line-height: 1.65;
+}
+.intro-text strong { color: var(--text); }
+
+/* ---- SESSION CARDS ---- */
+.session {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin-bottom: 1.2rem;
+  overflow: hidden;
+  transition: box-shadow 0.2s;
+}
+.session:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+
+.session-header {
+  padding: 1.1rem 1.3rem;
+  cursor: pointer;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  user-select: none;
+}
+.session-header:hover { background: rgba(0,0,0,0.01); }
+
+.session-num {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 0.7rem;
+  font-weight: 400;
+  color: #fff;
+  background: var(--ink);
+  border-radius: 6px;
+  padding: 0.25rem 0.55rem;
+  min-width: 28px;
+  text-align: center;
+  margin-top: 0.15rem;
+  flex-shrink: 0;
+}
+
+.session-info { flex: 1; }
+.session-title {
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.35;
+}
+.session-subtitle {
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin-top: 0.2rem;
+}
+
+.session-tag {
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  flex-shrink: 0;
+  margin-top: 0.2rem;
+}
+.tag-tech { background: var(--tech-soft); color: var(--tech); }
+.tag-social { background: var(--social-soft); color: var(--social); }
+.tag-bridge { background: var(--bridge-soft); color: var(--bridge); }
+
+.session-toggle {
+  color: var(--light);
+  font-size: 1.2rem;
+  transition: transform 0.3s;
+  margin-top: 0.15rem;
+  flex-shrink: 0;
+}
+.session.open .session-toggle { transform: rotate(180deg); }
+
+.session-body {
+  display: none;
+  padding: 0 1.3rem 1.3rem;
+  border-top: 1px solid var(--border);
+}
+.session.open .session-body { display: block; }
+
+/* ---- READING CARDS ---- */
+.reading {
+  margin-top: 1rem;
+  padding: 0.9rem 1rem;
+  border-radius: 8px;
+  border-left: 3px solid var(--border);
+}
+.reading.main-reading {
+  background: var(--accent-soft);
+  border-left-color: var(--accent);
+}
+.reading.optional-reading {
+  background: var(--green-soft);
+  border-left-color: var(--green);
+}
+
+.reading-label {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 0.35rem;
+}
+.reading.main-reading .reading-label { color: var(--accent); }
+.reading.optional-reading .reading-label { color: var(--green); }
+
+.reading-cite {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 0.95rem;
+  color: var(--ink);
+  line-height: 1.45;
+}
+.reading-cite em { font-style: italic; }
+
+.reading-meta {
+  display: flex;
+  gap: 0.8rem;
+  margin-top: 0.4rem;
+  font-size: 0.75rem;
+  color: var(--muted);
+  flex-wrap: wrap;
+}
+.reading-meta a {
+  color: var(--tech);
+  text-decoration: none;
+  font-weight: 500;
+}
+.reading-meta a:hover { text-decoration: underline; }
+
+.reading-note {
+  font-size: 0.83rem;
+  color: var(--muted);
+  margin-top: 0.45rem;
+  line-height: 1.55;
+}
+
+.discussion-q {
+  margin-top: 1rem;
+  padding: 0.7rem 0.9rem;
+  background: rgba(0,0,0,0.02);
+  border-radius: 6px;
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+.discussion-q strong {
+  display: block;
+  color: var(--text);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.3rem;
+}
+
+/* ---- RESOURCES GRID ---- */
+.resource-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+.resource-card {
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem;
+  transition: box-shadow 0.2s;
+}
+.resource-card:hover { box-shadow: 0 2px 10px rgba(0,0,0,0.06); }
+.resource-card h4 {
+  font-family: 'EB Garamond', serif;
+  font-size: 0.92rem;
+  color: var(--ink);
+  margin-bottom: 0.25rem;
+}
+.resource-card p {
+  font-size: 0.78rem;
+  color: var(--muted);
+  line-height: 1.5;
+}
+.resource-card .badge {
+  display: inline-block;
+  font-size: 0.63rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.15rem 0.45rem;
+  border-radius: 3px;
+  margin-bottom: 0.5rem;
+}
+.badge-book { background: var(--accent-soft); color: var(--accent); }
+.badge-free { background: var(--green-soft); color: var(--green); }
+.badge-course { background: var(--tech-soft); color: var(--tech); }
+
+/* ---- LOADING ---- */
+.loading-msg {
+  text-align: center;
+  padding: 2rem;
+  color: var(--light);
+  font-size: 0.9rem;
+}
+
+/* ---- FOOTER ---- */
+footer {
+  text-align: center;
+  padding: 2rem;
+  font-size: 0.78rem;
+  color: var(--light);
+  border-top: 1px solid var(--border);
+}
+footer a { color: var(--muted); }
+
+/* ---- RESPONSIVE ---- */
+@media (max-width: 600px) {
+  header { padding: 2.5rem 1.2rem 2rem; }
+  main { padding: 1.5rem 1rem 3rem; }
+  .session-header { gap: 0.7rem; }
+  .session-tag { display: none; }
+  nav a { padding: 0.75rem 0.8rem; font-size: 0.78rem; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>AI/ML y Ciencias Sociales</h1>
+  <p>Grupo de Lectura Académico Interdisciplinario</p>
+  <div class="header-meta">
+    <span>📅 Viernes 9:00 – 10:30</span>
+    <span>📖 1 lectura principal + opcional</span>
+    <span>🎓 Profesores e investigadores</span>
+  </div>
+</header>
+
+<nav>
+  <ul>
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#sesiones">Sesiones</a></li>
+    <li><a href="#recursos">Recursos</a></li>
+    <li><a href="#herramientas">Herramientas</a></li>
+  </ul>
+</nav>
+
+<main>
+
+<!-- ================================ ABOUT (static) ================================ -->
+<section id="sobre">
+  <h2>Sobre el grupo</h2>
+  <p class="intro-text">
+    Organizado por el <strong>USFQ Data Hub</strong>, este grupo reúne a profesores de <strong>economía, ciencia política, sociología, antropología, relaciones internacionales, ciencias de la computación y matemática</strong> para explorar juntos cómo la inteligencia artificial y el machine learning están transformando las ciencias sociales — tanto como herramientas metodológicas como objetos de estudio.
+  </p>
+  <p class="intro-text">
+    Cada sesión gira alrededor de <strong>una lectura principal</strong> accesible para toda la audiencia, con una lectura opcional para quienes quieran profundizar. Las sesiones alternan entre énfasis <span class="session-tag tag-tech" style="display:inline;font-size:0.72rem;">técnico</span> <span class="session-tag tag-social" style="display:inline;font-size:0.72rem;">crítico/social</span> y <span class="session-tag tag-bridge" style="display:inline;font-size:0.72rem;">puente</span> — lecturas que conectan ambas dimensiones.
+  </p>
+</section>
+
+<!-- ================================ SESSIONS (dynamic from Excel) ================================ -->
+<section id="sesiones">
+  <h2>Sesiones</h2>
+  <p class="intro-text">Haz clic en cada sesión para ver las lecturas y preguntas de discusión.</p>
+  <div id="sessions-container"><p class="loading-msg">Cargando sesiones…</p></div>
+</section>
+
+<!-- ================================ BOOKS (dynamic from Excel) ================================ -->
+<section id="recursos">
+  <h2>Libros de referencia</h2>
+  <p class="intro-text">Textos que sirven como referencia a lo largo de todo el semestre. Se recomienda tener acceso a al menos 2-3 de ellos.</p>
+  <div id="books-container" class="resource-grid"><p class="loading-msg">Cargando libros…</p></div>
+</section>
+
+<!-- ================================ TOOLS (dynamic from Excel) ================================ -->
+<section id="herramientas">
+  <h2>Herramientas y cursos</h2>
+  <p class="intro-text">Recursos para quienes quieran ir más allá de las lecturas.</p>
+  <div id="tools-container" class="resource-grid"><p class="loading-msg">Cargando herramientas…</p></div>
+
+  <div style="margin-top:1.5rem;">
+    <h3 style="font-family:'EB Garamond',serif;font-size:1.1rem;color:var(--ink);margin-bottom:0.8rem;">Paquetes clave de R y Python</h3>
+    <div id="packages-container" style="display:grid;grid-template-columns:1fr 1fr;gap:0.5rem;font-size:0.82rem;">
+      <p class="loading-msg">Cargando…</p>
+    </div>
+  </div>
+
+  <div style="margin-top:1.5rem;">
+    <h3 style="font-family:'EB Garamond',serif;font-size:1.1rem;color:var(--ink);margin-bottom:0.8rem;">Datos abiertos para América Latina</h3>
+    <div id="data-container" style="font-size:0.85rem;color:var(--muted);line-height:1.7;">
+      <p class="loading-msg">Cargando…</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <p>Grupo de Lectura · AI/ML y Ciencias Sociales · 2026</p>
+  <p style="margin-top:0.3rem;">Recurso curado para uso académico. <a href="bibliografia.xlsx" download>Bibliografía completa (Excel)</a></p>
+</footer>
+
+<script>
+/* ============================================================
+   DATA SOURCE: bibliografia.xlsx
+   ─────────────────────────────────────────────────────────────
+   All dynamic content is loaded from this single Excel file.
+   To update sessions, books, tools, etc., just edit the Excel
+   and push it to the repo. No HTML changes needed.
+
+   Sheets:
+     • Sesiones       → session cards
+     • Libros         → reference books grid
+     • Herramientas   → tools & courses grid
+     • Paquetes       → R/Python package lists
+     • DatosAbiertos  → open data links
+   ============================================================ */
+
+const DATA_FILE = 'bibliografia.xlsx';
+
+// ── Helpers ──
+
+function toggleSession(header) {
+  header.parentElement.classList.toggle('open');
+}
+
+function esc(str) {
+  if (!str && str !== 0) return '';
+  const d = document.createElement('div');
+  d.textContent = String(str);
+  return d.innerHTML;
+}
+
+function toRows(sheet) {
+  return XLSX.utils.sheet_to_json(sheet, { defval: '' });
+}
+
+// ── Tag config ──
+
+const TAGS = {
+  tech:   { cls: 'tag-tech',   label: 'Técnico' },
+  social: { cls: 'tag-social', label: 'Crítico' },
+  bridge: { cls: 'tag-bridge', label: 'Puente' },
+};
+
+// ── Render: Sessions ──
+
+function renderSessions(rows) {
+  const el = document.getElementById('sessions-container');
+  el.innerHTML = rows.map((r, i) => {
+    const num = String(r.num).padStart(2, '0');
+    const tag = TAGS[r.tag] || TAGS.bridge;
+
+    let mainMeta = '';
+    if (r.main_access) mainMeta += `<span>${esc(r.main_access)}</span>`;
+    if (r.main_link)   mainMeta += `<a href="${esc(r.main_link)}" target="_blank">${esc(r.main_link_text || 'Leer →')}</a>`;
+
+    let optMeta = '';
+    if (r.opt_access) optMeta += `<span>${esc(r.opt_access)}</span>`;
+    if (r.opt_link)   optMeta += `<a href="${esc(r.opt_link)}" target="_blank">${esc(r.opt_link_text || 'Leer →')}</a>`;
+
+    return `
+    <div class="session${i === 0 ? ' open' : ''}" id="s${r.num}">
+      <div class="session-header" onclick="toggleSession(this)">
+        <span class="session-num">${num}</span>
+        <div class="session-info">
+          <div class="session-title">${esc(r.title)}</div>
+          <div class="session-subtitle">${esc(r.subtitle)}</div>
+        </div>
+        <span class="session-tag ${tag.cls}">${tag.label}</span>
+        <span class="session-toggle">▾</span>
+      </div>
+      <div class="session-body">
+        <div class="reading main-reading">
+          <div class="reading-label">Lectura principal</div>
+          <div class="reading-cite">${esc(r.main_cite)}</div>
+          ${mainMeta ? `<div class="reading-meta">${mainMeta}</div>` : ''}
+          ${r.main_note ? `<div class="reading-note">${esc(r.main_note)}</div>` : ''}
+        </div>
+        ${r.opt_cite ? `
+        <div class="reading optional-reading">
+          <div class="reading-label">${esc(r.opt_label || 'Opcional')}</div>
+          <div class="reading-cite">${esc(r.opt_cite)}</div>
+          ${optMeta ? `<div class="reading-meta">${optMeta}</div>` : ''}
+          ${r.opt_note ? `<div class="reading-note">${esc(r.opt_note)}</div>` : ''}
+        </div>` : ''}
+        ${r.discussion ? `
+        <div class="discussion-q">
+          <strong>Preguntas para la discusión</strong>
+          ${esc(r.discussion)}
+        </div>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ── Render: Resource cards (books & tools) ──
+
+function renderCards(rows, containerId) {
+  const el = document.getElementById(containerId);
+  el.innerHTML = rows.map(r => {
+    const cls = r.badge_type === 'free' ? 'badge-free' : r.badge_type === 'course' ? 'badge-course' : 'badge-book';
+    const link = r.link_url
+      ? `<div class="reading-meta" style="margin-top:0.5rem"><a href="${esc(r.link_url)}" target="_blank">${esc(r.link_text)}</a></div>`
+      : (r.link_text ? `<div class="reading-meta" style="margin-top:0.5rem"><span>${esc(r.link_text)}</span></div>` : '');
+    return `
+    <div class="resource-card">
+      <span class="badge ${cls}">${esc(r.badge_label)}</span>
+      <h4>${esc(r.title)}</h4>
+      <p>${esc(r.description)}</p>
+      ${link}
+    </div>`;
+  }).join('');
+}
+
+// ── Render: Packages ──
+
+function renderPackages(rows) {
+  const el = document.getElementById('packages-container');
+  el.innerHTML = rows.map(r =>
+    `<div><strong>${esc(r.language)}:</strong> ${esc(r.packages)}</div>`
+  ).join('');
+}
+
+// ── Render: Open data links ──
+
+function renderData(rows) {
+  const el = document.getElementById('data-container');
+  el.innerHTML = rows.map(r =>
+    `<a href="${esc(r.url)}" target="_blank" style="color:var(--tech);">${esc(r.name)}</a>`
+  ).join(' &middot; ');
+}
+
+// ── Load Excel and render everything ──
+
+fetch(DATA_FILE)
+  .then(res => {
+    if (!res.ok) throw new Error('No se pudo cargar ' + DATA_FILE);
+    return res.arrayBuffer();
+  })
+  .then(buf => {
+    const wb = XLSX.read(buf, { type: 'array' });
+    const get = name => wb.SheetNames.includes(name) ? toRows(wb.Sheets[name]) : [];
+
+    renderSessions(get('Sesiones'));
+    renderCards(get('Libros'), 'books-container');
+    renderCards(get('Herramientas'), 'tools-container');
+    renderPackages(get('Paquetes'));
+    renderData(get('DatosAbiertos'));
+  })
+  .catch(err => {
+    console.error(err);
+    document.querySelectorAll('.loading-msg').forEach(el => {
+      el.textContent = 'Error al cargar datos. Verifica que bibliografia.xlsx esté en el mismo directorio.';
+      el.style.color = 'var(--accent)';
+    });
+  });
+
+// ── Nav: smooth scroll + active highlight ──
+
+document.querySelectorAll('nav a').forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const t = document.querySelector(link.getAttribute('href'));
+    if (t) t.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+window.addEventListener('scroll', () => {
+  let current = '';
+  document.querySelectorAll('section[id]').forEach(s => {
+    if (window.scrollY >= s.offsetTop - 100) current = s.id;
+  });
+  document.querySelectorAll('nav a').forEach(l => {
+    l.classList.toggle('active', l.getAttribute('href') === '#' + current);
+  });
+});
+</script>
+
+</body>
+</html>
