@@ -2,7 +2,7 @@
 
 Sitio web del grupo de lectura interdisciplinario organizado por el **USFQ Data Hub**, donde profesores e investigadores de economía, ciencia política, sociología, antropología, relaciones internacionales, ciencias de la computación y matemática exploran cómo la inteligencia artificial y el machine learning están transformando las ciencias sociales.
 
-🔗 **Sitio en vivo:** [https://TU-USUARIO.github.io/grupo-lectura-aiml/](https://TU-USUARIO.github.io/grupo-lectura-aiml/)
+🔗 **Sitio en vivo:** [https://dhubanalytics.github.io/grupo-lectura-aiml/](https://TU-USUARIO.github.io/grupo-lectura-aiml/)
 
 ---
 
